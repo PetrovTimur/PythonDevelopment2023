@@ -1,4 +1,7 @@
 from random import choice
+from urllib.request import urlopen
+from os.path import isfile
+import argparse
 
 
 def bullscows(guess: str, secret: str) -> (int, int):
@@ -35,3 +38,21 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
         guess = ask("Введите слово: ", words)
 
     return tries + 1
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('dictionary', help='provide dictionary to use')
+    parser.add_argument('-l', help='specify length of words used', type=int, default=5, metavar='length')
+
+    args = parser.parse_args()
+
+    if isfile(args.dictionary):
+        with open(args.dictionary, "r") as f:
+            dictionary = f.read().split()
+    else:
+        dictionary = urlopen(args.dictionary).read().decode().split()
+
+    new_dictionary = [word for word in dictionary if len(word) == args.l]
+
+    print("Вы угадали слово за {} попыток!".format(gameplay(ask, inform, new_dictionary)))
