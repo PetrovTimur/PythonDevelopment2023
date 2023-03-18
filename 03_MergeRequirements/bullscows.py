@@ -2,6 +2,7 @@ from random import choice
 from urllib.request import urlopen
 from os.path import isfile
 import argparse
+import cowsay
 
 
 def bullscows(guess: str, secret: str) -> (int, int):
@@ -10,21 +11,20 @@ def bullscows(guess: str, secret: str) -> (int, int):
 
     return bulls, cows
 
-
 def ask(prompt: str, valid: list[str] = None) -> str:
     if valid:
-        word = input(prompt)
+        word = input(cowsay.cowsay(prompt, cow=cowsay.get_random_cow()) + '\n')
         while word not in valid:
-            print("Неизвестное слово, повторите попытку...")
-            word = input(prompt)
+            print(cowsay.cowsay("Неизвестное слово, повторите попытку...", cow=cowsay.get_random_cow()) + '\n')
+            word = input(cowsay.cowsay(prompt, cow=cowsay.get_random_cow()) + '\n')
 
         return word
     else:
-        return input(prompt)
+        return input(cowsay.cowsay(prompt, cow=cowsay.get_random_cow()) + '\n')
 
 
 def inform(format_string: str, bulls: int, cows: int) -> None:
-    print(format_string.format(bulls, cows))
+    print(cowsay.cowsay(format_string.format(bulls, cows), cow=cowsay.get_random_cow()))
 
 
 def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
