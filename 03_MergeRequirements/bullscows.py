@@ -3,6 +3,7 @@ from urllib.request import urlopen
 from os.path import isfile
 import argparse
 import cowsay
+from io import StringIO
 
 
 def bullscows(guess: str, secret: str) -> (int, int):
@@ -11,16 +12,29 @@ def bullscows(guess: str, secret: str) -> (int, int):
 
     return bulls, cows
 
+
 def ask(prompt: str, valid: list[str] = None) -> str:
+
+    owl = cowsay.read_dot_cow(StringIO("""
+    $the_cow = <<EOC;
+             $thoughts
+              $thoughts
+               ___
+              (o o)
+             (  V  )
+            /--m-m-
+    EOC
+    """))
+
     if valid:
-        word = input(cowsay.cowsay(prompt, cow=cowsay.get_random_cow()) + '\n')
+        word = input(cowsay.cowsay(prompt, cowfile=owl) + '\n')
         while word not in valid:
-            print(cowsay.cowsay("Неизвестное слово, повторите попытку...", cow=cowsay.get_random_cow()) + '\n')
-            word = input(cowsay.cowsay(prompt, cow=cowsay.get_random_cow()) + '\n')
+            print(cowsay.cowsay("Неизвестное слово, повторите попытку...", cowfile=owl) + '\n')
+            word = input(cowsay.cowsay(prompt, cowfile=owl) + '\n')
 
         return word
     else:
-        return input(cowsay.cowsay(prompt, cow=cowsay.get_random_cow()) + '\n')
+        return input(cowsay.cowsay(prompt, cowfile=owl) + '\n')
 
 
 def inform(format_string: str, bulls: int, cows: int) -> None:
